@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <locale.h>
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+	int l, n, k, m; double l1, n1;
+	l1 = 337.;
+	l = 337;
+	n1 = 4.;
+	n = 4;
+	k = 5;
+	m = 3;
+	printf("%80i, %i, %i, %i - Вариант 3 (Боев К.С)\n", l, n, k, m);
+	printf("%i делить на %i равно +0000%5.3f", n, l, (n1 / l1));
+
+}
