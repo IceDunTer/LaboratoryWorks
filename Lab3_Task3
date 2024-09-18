@@ -7,10 +7,10 @@ int main() {
 	float a, b, a1, b1;
 
 	puts("Введите число А:\n");
-	scanf_s("%f", &a);
-	puts("Введите число :\n");
-	scanf_s("%f", &b);
-	printf("|  a * b  |  a + b  |  a - b  |\n");
-	printf("|%.1f * %.1f|%.1f + %.1f|%.1f - %.1f|\n", a, b, a, b, a, b);
-	printf("|   %.1f   |   %.1f   |   %.1f   |\n", a*b, a+b, a-b);
+	scanf("%f", &a);
+	puts("Введите число B:\n");
+	scanf("%f", &b);
+	printf("|\t\ta * b\t\t|\t\ta + b\t\t|\t\ta - b\t\t|\n");
+	printf("|%f * %f|%f + %f|%f - %f|\n", a, b, a, b, a, b);
+	printf("|\t\t%f\t|\t\t %f\t|\t\t%f\t|\n", a*b, a+b, a-b);
 }
