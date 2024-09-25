@@ -1,0 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <math.h>
+#define _USE_MATH_DEFINES
+
+int main() {
+	setlocale(LC_ALL, "RUS");
+	int x;
+	double max;
+	puts("Введитe Х:\n");
+	scanf_s("%i", &x);
+	max = x <= -3. ? x : (1/(x*x+1));
+	printf("%lg", max);
+}
