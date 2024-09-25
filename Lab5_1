@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#define M_PI 3.14159265358979323846
+
+int main() {
+	setlocale(LC_ALL, "RUS");
+	double gr;
+
+	puts("Введи градус для расчёта\n");
+	scanf_s("%lg", &gr);
+
+	double ans = (gr * M_PI / 180);
+
+	printf("%lg градусов = %.6f", gr, sin(ans));
+}
