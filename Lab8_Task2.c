@@ -8,38 +8,23 @@
 // y = 3
 int main() {
 	setlocale(LC_ALL, "RUS");
-	double x;
+	double x, x1, tab;
 	float y;
-	int tab;
-	puts("Введите Х в интервале [1;3]:\n");
-	scanf("%lg", &x);
-
-	y = pow(x, 2) - pow(cos(Pi * x), 2);
-
-	puts("Введите шаг табуляции:\n");
-	scanf("%i", &tab);
-
+	puts("Введите начало интервала:\n");
+	scanf("%lf", &x);
+	puts("Введите край интервала:\n");
+	scanf("%lf", &x1);
+   	puts("Введите шаг:\n");
+	scanf("%lf", &tab);
 	printf("| ");
 	printf("(x)");
-	for (int i = 0; i < tab; i++) {
-		printf("\t");
-	}
 	printf("| f(x)");
-	for (int i = 0; i < tab; i++) {
-		printf("\t");
-	}
 	printf("|\n");
-
-	printf("| ");
-	printf("(%.2lg)", x);
-	for (int i = 0; i < tab; i++) {
-		printf("\t");
-	}
-	printf("| %.2f", y);
-	for (int i = 0; i < tab; i++) {
-		printf("\t");
-	}
-	printf("|");
-
-
+	for (double i = x; i<=x1; i += tab) {
+	    y = pow(i, 2) - pow(cos(Pi * i), 2);
+	    printf("| ");
+	    printf("(%.2lf)", i);
+	    printf("| %.2f", y);
+	    printf("|\n");
+	} 
 }
