@@ -19,8 +19,27 @@ int main() {
 	puts("Введите шаг табуляции:\n");
 	scanf_s("%i", &tab);
 
+	printf("| ");
+	printf("(x)");
 	for (int i = 0; i <= tab; i++) {
 		printf("\t");
 	}
-	
+	printf("| f(x)");
+	for (int i = 0; i <= tab; i++) {
+		printf("\t");
+	}
+	printf("|\n");
+
+	printf("| ");
+	printf("(%.2lg)", x);
+	for (int i = 0; i <= tab; i++) {
+		printf("\t");
+	}
+	printf("| %.2f", y);
+	for (int i = 0; i <= tab; i++) {
+		printf("\t");
+	}
+	printf("|");
+
+
 }
