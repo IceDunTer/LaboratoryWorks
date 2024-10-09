@@ -19,6 +19,6 @@ int main() {
 
 	v = A / B * C + D;
 
-	printf("%lg", v);
+	printf("x = %lg\ny = %lg\nz = %lg\nv = %lg", x, y, z, v);
 
 }
