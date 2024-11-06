@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <math.h>
 #include <locale.h>
-#define M_PI 3.1415926535
+#define M_PI 3.14159265358979323846
 
-#define SIZE 100
+#define N 100
 
 int main() {
     setlocale(LC_ALL, "RUS");
-    double array[SIZE];
+    double array[N];
     double a = 0.0;
     int pCount = 0;
 
-    for (int i = 0; i < SIZE; i++) {
-        double x = 1.0 + (2.0 * i) / (SIZE - 1);
+    for (int i = 0; i < N; i++) {
+        double x = 1.0 + (2.0 * i) / (N - 1);
         array[i] = x * x - pow(cos(M_PI * x), 2);
 
         if (array[i] > 0) {
