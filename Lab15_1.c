@@ -11,7 +11,7 @@
 int main() {
 	setlocale(LC_ALL, "RUS");
 	int row, col;
-	double num;
+	double ans, min, max;
 	puts("Введите количество столбцов:");
 	scanf_s("%i", &row);
 	puts("Введите длину строки:");
@@ -26,8 +26,11 @@ int main() {
 	for (int i = 0; i < row; i++) {
 		for (int j = 0; j < col; j++) {
 			printf("%.2f ", arr[i][j]);
-
+			ans = arr[i][j];
 		}
 		printf("\n");
 	}
+	printf("Число в крайнем правом нижнем углу: %lg\n", ans);
+	printf("Минимальное число: %lg, максимальное: %lg\n", min, max);
+
 }
