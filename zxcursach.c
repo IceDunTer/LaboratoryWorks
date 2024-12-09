@@ -21,6 +21,8 @@ int InfoCount = 0;
 void addInfo();
 void findInfo();
 void modInfo();
+void printInfo();
+void printSortedInfo();
 void save();
 void load();
 
@@ -29,11 +31,13 @@ int main() {
 	int pick = 1;
 	do {
 		printf("// Выберите действия, написанные снизу \\\\\n");
-		printf("1. Добавить информацию по камере\n");
-		printf("2. Найти информацию по камере\n");
-		printf("3. Изменить информацию по камере\n");
-		printf("4. Сохранить файл\n");
-		printf("5. Загрузить файл\n");
+		printf("1. Добавить информацию о камере\n");
+		printf("2. Найти информацию о камере\n");
+		printf("3. Изменить информацию о камере\n");
+		printf("4. Вывести информацию о камере\n");
+		printf("5. Вывести отсортированную информацию о камере\n");
+		printf("6. Сохранить файл\n");
+		printf("7. Загрузить файл\n");
 		printf("0. Завершить работу\n");
 		scanf("%i", &pick);
 
@@ -74,11 +78,19 @@ void addInfo() {
 }
 
 void findInfo() {
-	printf("Поиск информации по камере...\n\n");
+	printf("Поиск информации о камере...\n\n");
 }
 
 void modInfo() {
-	printf("Изменение информации по камере...\n\n");
+	printf("Изменение информации о камере...\n\n");
+}
+
+void printInfo(); {
+	printf("Вывожу информацию о камере...\n\n");
+}
+
+void printSortedInfo(); {
+	printf("Сортирую и вывожу информацию о камере...\n\n");
 }
 
 void save() {
