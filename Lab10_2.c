@@ -4,34 +4,69 @@
 #include <math.h>
 #define M_PI 3.14159265358979323846
 
-unsigned int factorial(unsigned int b) {
-    if (b == 1) {
-        return 1;
+double factorial(double n) {
+    double fact = 1;
+    while (n > 1.) {
+		fact *= n;
+		n -= 1.;
+	}
+	return fact;
+}
+
+double cosx(double x, int n) {
+    double result = 0.0;
+    double num = 1.0;
+    int sign = 1;
+
+    for (int i = 0; i < n; i++) {
+        result += num;
+        sign = -sign;
+        num = num * x * x / factorial(n);
     }
-    return b * factorial(b - 1);
+    return result;
 }
 
-double arcctg_n(double x, int n) {
-	return (M_PI/2 + (pow(-1, n+1)*pow(x, 2*n+1))/(2*n+1));
-}
+double cos_eps(double x, double eps) {
+    double result = 1.0;
+    double num = 1.0;
+    int n = 0;
+    int sign = 1;
 
-double arcctg_eps(double x, double eps) {
-
+    while (fabs(num) > eps) {
+        result += num;
+        sign = -sign;
+        n++;
+        num = sign * num * x * x / factorial(n);
+    }
+    return result;
 }
 
 int main() {
-	setlocale(LC_ALL, "RUS");
-	double a, eps;
-	int N;
-	puts("Введите число [|x|<=1]:");
-	scanf_s("%lg", &a);
-	puts("Введите число повторений N:");
-	scanf_s("%i", &N);
-	puts("Введите число точность для ряда Маклорена:");
-	scanf_s("%lg", &eps);
+    double x;
+    int n;
+    double eps;
 
-	printf("Арккотангенс числа функцией стандартной библиотеки: %lg\n", (M_PI/2 - atan(a)));
-	printf("Арккотангенс числа функцией с количеством повторений N: %lg\n", arcctg_n(a, N));
-	printf("");
+    printf("Введите значение x: ");
+    scanf("%lf", &x);
+    printf("Введите количество членов ряда: ");
+    scanf("%d", &n);
+    printf("Введите точность (epsilon): ");
+    scanf("%lf", &eps);
 
+
+
+
+    printf("| N|         cos_N|    отклонение|\n");
+	for (int i = 0; i <= n; i++) {
+		printf("|%2i|%14f|%14f|\n", i, cosx(x, i), fabs(cos(x)-cosx(x, i)));
+	}
+	printf("\n");
+	printf("| N|        exp(N)|    отклонение|\n");
+	for (int i = 0; i <= n; i++) {
+		printf("|%2i|%14f|%14f|\n", i, cos_eps(x, i), fabs(exp(-x) - cos_eps(x, i)));
+    }
+    printf("cos(%.2f) с использованием стандартной библиотеки: %.10f\n", x, cos(x));
+    printf("cos(%.2f) как сумма ряда с %d членами: %.10f\n", x, n, cosx(x, n));
+    printf("cos(%.2f) через ряд Маклорена с точностью %.2lg: %.10f\n", x, eps, cos_eps(x, eps));
+    
 }
