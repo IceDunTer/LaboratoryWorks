@@ -1,0 +1,6 @@
+640x480 0,3 no Type-A 54
+1280x720 1 yes Type-A 90
+2560x1440 4 yes Type-A 120
+1920x1080 2 no Type-A 150
+2592x1944 5 yes Type-A 90
+1920x1080 2 yes Type-C 70
