@@ -34,8 +34,9 @@ int main() {
         printf("3. Изменить информацию о камере\n");
         printf("4. Вывести информацию о камере\n");
         printf("5. Отсортировать и вывести информацию о камере\n");
-        printf("6. Сохранить файл\n");
-        printf("7. Загрузить файл\n");
+        printf("6. Добавлять информацию о произвольном количестве камер\n");
+        printf("7. Сохранить файл\n");
+        printf("8. Загрузить файл\n");
         printf("0. Завершить работу\n");
         scanf("%i", &pick);
 
@@ -60,7 +61,8 @@ int main() {
                 printf("\tМикрофон: %s\n", database[index].microphone);
                 printf("\tТип подключения: %s\n", database[index].connectionType);
                 printf("\tУгол обзора: %i\n", database[index].angle);
-            } else {
+            }
+            else {
                 printf("Запись не найдена.\n");
             }
             break;
@@ -76,11 +78,14 @@ int main() {
             flag = printSortedInfo();
             if (flag == -1) printf("Записей не обнаружено!\n\n");
             break;
-        case 6:
+        case 7:
             save();
             break;
-        case 7:
+        case 8:
             load();
+            break;
+        case 6:
+            addCustomInfo();
             break;
         case 0:
             pick = 0;
@@ -97,7 +102,7 @@ void addInfo() {
         printf("Превышен лимит записи в базу данных!\n\n");
         return;
     }
-    Information *i = &database[recordCount];
+    Information* i = &database[recordCount];
 
     printf("\t\t// Запись камеры #%i \\\\\n", recordCount + 1);
     printf("Введите разрешение: ");
@@ -131,7 +136,7 @@ void modInfo() {
         return;
     }
 
-    Information *i = &database[index];
+    Information* i = &database[index];
 
     printf("\t\t// Изменение записи камеры #%i \\\\\n", index + 1);
     printf("Введите новое разрешение: ");
@@ -152,27 +157,71 @@ int printInfo() {
         printf("\t\t//Запись #%i:\\\\\n", i + 1);
         printf("\tРазрешение: %s", database[i].resolution);
         printf("\tЧисло мегапикселей: %lg", database[i].mpixNum);
-        printf("\tНаличие камеры: %s", database[i].microphone);
+        printf("\tНаличие микрофона: %s", database[i].microphone);
         printf("\tТип подключения: %s", database[i].connectionType);
-        printf("\tУгол обзора: %i \n\n", database[i].angle);
+        printf("\t\tУгол обзора: %i \n\n", database[i].angle);
     }
 }
 
 int printSortedInfo() {
-    for (int i = 0; i < recordCount - 1; i++) {
-        for (int j = 0; j < recordCount - i - 1; j++) {
-            if (strcmp(database[j].resolution, database[j + 1].resolution) > 0) { //Узнать, можно ли поменять поле сортировки, т.к. сортировать по разрешению не очень удобно, хоть и работает.
-                Information temp = database[j];
-                database[j] = database[j + 1];
-                database[j + 1] = temp;
+    int flagConnectionType = 0, flagMicrophone = 0;
+    puts("// Сортировать по типам подключения? (1 - да/0 - нет) \\");
+    scanf("%i", &flagConnectionType);
+
+    puts("// Сортировать по наличию микрофона? (1 - да/0 - нет) \\");
+    scanf("%i", &flagMicrophone);
+
+    if (flagConnectionType && flagMicrophone) {
+        for (int i = 0; i < recordCount - 1; i++) {
+            for (int j = 0; j < recordCount - i - 1; j++) {
+                if ((strcmp(database[j].microphone, database[j + 1].microphone) > 0) && (strcmp(database[j].connectionType, database[j + 1].connectionType) > 0)) { //Узнать, можно ли поменять поле сортировки, т.к. сортировать по разрешению не очень удобно, хоть и работает.
+                    Information temp = database[j];
+                    database[j] = database[j + 1];
+                    database[j + 1] = temp;
+                }
             }
         }
+        printInfo();
     }
-    printInfo();
+
+    else if (flagConnectionType) {
+        for (int i = 0; i < recordCount - 1; i++) {
+            for (int j = 0; j < recordCount - i - 1; j++) {
+                if ((strcmp(database[j].connectionType, database[j + 1].connectionType) > 0)) {
+                    Information temp = database[j];
+                    database[j] = database[j + 1];
+                    database[j + 1] = temp;
+                }
+            }
+        }
+        printInfo();
+    }
+
+    else if (flagMicrophone) {
+        for (int i = 0; i < recordCount - 1; i++) {
+            for (int j = 0; j < recordCount - i - 1; j++) {
+                if ((strcmp(database[j].microphone, database[j + 1].microphone) > 0)) { 
+                    Information temp = database[j];
+                    database[j] = database[j + 1];
+                    database[j + 1] = temp;
+                }
+            }
+        }
+        printInfo();
+    }
+}
+
+int addCustomInfo() {
+    int customCount = 0;
+    puts("// Введите количество записей данных для камеры: \\\\");
+    scanf("%i", &customCount);
+    for (int j = recordCount; j < (recordCount + customCount); j++) {
+        addInfo();
+    }
 }
 
 void save() {
-    FILE *file = fopen("cameras.txt", "w");
+    FILE* file = fopen("cameras.txt", "w");
     if (file == NULL) {
         perror("Ошибка открытия файла");
         return;
@@ -185,7 +234,7 @@ void save() {
 }
 
 void load() {
-    FILE *file = fopen("cameras.txt", "r");
+    FILE* file = fopen("cameras.txt", "r");
     if (file == NULL) {
         perror("Ошибка открытия файла");
         return;
