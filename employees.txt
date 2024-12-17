@@ -1,0 +1,6 @@
+Kuznetsov Ivan Sidorovich Manager 30022 45 25.09.1980
+Sidorov Semyon Petrovich Designer 34252 36 10.12.1995
+Sidorov Kuzma Ivanovich Engineer 38235 44 15.05.1985
+Kuznetsov Semyon Kuzmich Developer 53890 32 01.01.1990
+Sidorov Kuzma Ivanovich Analyst 54409 36 01.01.1990
+Kuznetsov Petr Ivanovich Analyst 58422 44 15.05.1985
