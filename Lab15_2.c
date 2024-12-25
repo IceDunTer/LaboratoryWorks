@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <locale.h>
-#include <math.h>
-#include <string.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define ROW 7
 #define COL 7
-#define Pi 3.1415926535
 
 void fill_elements(int arr[ROW][COL]) {
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COL; j++) {
-            int x = 6*i-2*j;
-            arr[i][j] = x*x-3*x+4;
+            arr[i][j] = rand() % 21 - 10;
         }
     }
 }
@@ -33,7 +31,7 @@ void transpose_array(int arr[ROW][COL], int ts[COL][ROW]) {
     }
 }
 
-int zero_elem(int arr[ROW][COL]) {
+int nonzero_elem_in_first_row(int arr[ROW][COL]) {
     int count = 0;
     for (int j = 0; j < COL; j++) {
         if (arr[0][j] != 0) count++;
@@ -67,20 +65,17 @@ char* max_elem(int arr[ROW][COL]) {
         }
     }
 
-    for (int i = 0; i < ROW; i++) {
-        if (arr[i][m_j] == max) {
-            m_i = i;
-        }
-    }
-
     static char ans[20];
-    sprintf(ans, "%d | %d", m_i, m_j);
+    sprintf(ans, "%i | %i", m_i, m_j);
     return ans;
 }
 
 int main() {
+    setlocale(LC_ALL, "RUS");
     int array[ROW][COL];
     int transposed[COL][ROW];
+
+    srand(time(NULL));
 
     fill_elements(array);
     printf("// Исходный массив: \\\\\n");
@@ -90,8 +85,8 @@ int main() {
     printf("\n// Транспонированный массив: \\\\\n");
     print_array(transposed);
 
-    printf("\nКоличество ненулевых элементов в первой строке: %i\n", zero_elem(array));
-    printf("Количество пар одинаковых соседних элементов в столбцах: %d\n", pairs_in_columns(array));
+    printf("\nКоличество ненулевых элементов в первой строке: %i\n", nonzero_elem_in_first_row(array));
+    printf("Количество пар одинаковых соседних элементов в столбцах: %i\n", pairs_in_columns(array));
     printf("Координаты максимального элемента (x | y): %s\n", max_elem(array));
 
     return 0;
