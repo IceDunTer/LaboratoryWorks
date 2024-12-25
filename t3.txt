@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
+#include <locale.h>
+#include <stdlib.h>
+#define NMAX 100
+#define TYPE int
+
+typedef struct Stack {
+    int top;
+    TYPE data[NMAX];
+} stack;
+
+int isempty(stack* s) {
+    return s->top == -1;
+}
+
+int isfull(stack* s) {
+    return s->top == NMAX - 1;
+}
+
+int push(stack* s, TYPE a) {
+    if (!isfull(s)) {
+        s->data[++s->top] = a;
+        return 1;
+    }
+    printf("Стек переполнен\n");
+    return 0;
+}
+
+TYPE pop(stack* s) {
+    if (!isempty(s)) {
+        return s->data[s->top--];
+    }
+    printf("Стек пуст\n");
+    return '\0';
+}
+
+void display(stack* s) {
+    if (isempty(s)) {
+        printf("Стек пуст\n");
+        return;
+    }
+    for (int i = 0; i <= s->top; i++) {
+        printf("%i ", s->data[i]);
+    }
+    printf("\n");
+}
+stack reverse(stack* s) {
+    stack z = { .top = -1 };
+    while (!isempty(s)) {
+        push(&z, pop(s));
+    }
+    return z;
+}
+
+int main() {
+    stack z = { .top = -1 };
+    stack c = { .top = -1 };
+    int s = 0, p = 1, cnt= 0, cnt1 = 0;
+    setlocale(LC_ALL, "RUS");
+    while (p != 0) {
+        printf("Введите число\n");
+        scanf("%i", &s);
+        if (s != 0) push(&z, s);
+        printf("Если хотите закончить ввод, введите 0, иначе 1\n");
+        scanf("%i", &p);
+    }
+    printf("Исходный стек:\n");
+    display(&z);
+    cnt1 = cnt = ((&z)->top + 1) / 2;
+    while (cnt != 0) {
+        cnt--;
+        push(&c, pop(&z));
+    }
+    c = reverse(&c);
+    z = reverse(&z);
+    while (!isempty(&z)) {
+        push(&c, pop(&z));
+    }
+    printf("Стек после перестановки:\n");
+    display(&c);
+
+    return 0;
+}
