@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LENGTH 100
+#define MAX_LENGTH 10000
 typedef struct {
     char resolution[MAX_LENGTH];
     double mpixNum;
@@ -21,6 +21,7 @@ int findInfo(int angle, const char* microphone);
 void modInfo();
 int printInfo();
 int printSortedInfo();
+int addCustomInfo();
 void save();
 void load();
 
@@ -94,28 +95,30 @@ int main() {
         default:
             printf("Неправильно введено значение!\n\n");
         }
-    } while (pick != 0);
+    } while (pick);
 }
 
 void addInfo() {
+    int flag = 0;
     if (recordCount >= MAX_LENGTH) {
         printf("Превышен лимит записи в базу данных!\n\n");
         return;
     }
     Information* i = &database[recordCount];
 
+    printf("Введите разрешение, число мегапикселей, наличие микрофона (yes/no), тип подключения и угол обзора через Enter:\n");
     printf("\t\t// Запись камеры #%i \\\\\n", recordCount + 1);
-    printf("Введите разрешение: ");
     scanf("%s", i->resolution);
-    printf("Введите число мегапикселей: ");
     scanf("%lg", &i->mpixNum);
-    printf("Введите наличие микрофона (yes/no): ");
-    scanf("%s", i->microphone);
-    printf("Введите тип подключения: ");
+    while (!flag) {
+        scanf("%s", i->microphone);
+        if (strcmp(i->microphone, "yes") == 0 || strcmp(i->microphone, "no") == 0) flag = 1;
+        else printf("Неправильно введено значение: Наличие микрофона. Введите (yes/no)!");
+    }
     scanf("%s", i->connectionType);
-    printf("Введите угол обзора: ");
     scanf("%i", &i->angle);
     recordCount++;
+    return;
 }
 
 int findInfo(int angle, const char* microphone) {
@@ -129,39 +132,50 @@ int findInfo(int angle, const char* microphone) {
 
 void modInfo() {
     int index;
-    printf("Введите индекс записи для изменения: ");
+    int flag = 0;
+    printf("Введите номер записи для изменения: ");
     scanf("%i", &index);
-    if (index < 0 || index >= recordCount) {
-        printf("Неверный индекс!\n");
+    if (index-1 < 0 || index-1 >= recordCount) {
+        printf("Неверный номер!\n");
         return;
     }
 
-    Information* i = &database[index];
+    Information* i = &database[index-1];
 
-    printf("\t\t// Изменение записи камеры #%i \\\\\n", index + 1);
+    printf("\t\t// Изменение записи камеры #%i \\\\\n", index);
     printf("Введите новое разрешение: ");
     scanf("%s", i->resolution);
     printf("Введите новое число мегапикселей: ");
     scanf("%lg", &i->mpixNum);
     printf("Введите наличие микрофона: ");
-    scanf("%s", i->microphone);
+    while (!flag) {
+        scanf("%s", i->microphone);
+        if (strcmp(i->microphone, "yes") == 0 || strcmp(i->microphone, "no") == 0) flag = 1;
+        else printf("Неправильно введено значение: Наличие микрофона. Введите (yes/no)!");
+    }
     printf("Введите новый тип подключения: ");
     scanf("%s", i->connectionType);
     printf("Введите новый угол обзора: ");
     scanf("%i", &i->angle);
+    return;
 }
 
 int printInfo() {
-    if (recordCount == 0) return -1;
+    if (recordCount == 0) {
+        printf("Записей нет!\n");
+        return -1;
+    }
     for (int i = 0; i < recordCount; i++) {
         printf("\t\t//Запись #%i:\\\\\n", i + 1);
-        printf("\tРазрешение: %s", database[i].resolution);
-        printf("\tЧисло мегапикселей: %lg", database[i].mpixNum);
-        printf("\tНаличие микрофона: %s", database[i].microphone);
-        printf("\tТип подключения: %s", database[i].connectionType);
-        printf("\t\tУгол обзора: %i \n\n", database[i].angle);
+        printf("\tРазрешение: %s\n", database[i].resolution);
+        printf("\tЧисло мегапикселей: %lg\n", database[i].mpixNum);
+        printf("\tНаличие микрофона: %s\n", database[i].microphone);
+        printf("\tТип подключения: %s\n", database[i].connectionType);
+        printf("\tУгол обзора: %i\n\n", database[i].angle);
     }
+    return 0;
 }
+
 
 int printSortedInfo() {
     int flagConnectionType = 0, flagMicrophone = 0;
@@ -181,7 +195,6 @@ int printSortedInfo() {
                 }
             }
         }
-        printInfo();
     }
 
     else if (flagConnectionType) {
@@ -194,7 +207,6 @@ int printSortedInfo() {
                 }
             }
         }
-        printInfo();
     }
 
     else if (flagMicrophone) {
@@ -207,42 +219,54 @@ int printSortedInfo() {
                 }
             }
         }
-        printInfo();
     }
+    else printf("Сортировка не была произведена!");
+    printInfo();
+    return 0;
 }
 
 int addCustomInfo() {
+    int flag = 0;
     int customCount = 0;
     puts("// Введите количество записей данных для камеры: \\\\");
-    scanf("%i", &customCount);
-    for (int j = recordCount; j < (recordCount + customCount); j++) {
+    while (flag == 0) {
+        scanf("%i", &customCount);
+        if (recordCount+customCount < MAX_LENGTH) flag = 1;
+        else printf("Ошибка! При произвольном количестве записи будет превышен лимит записи в БД!\nЗапишите новое количество записей данных: ");
+    }
+    for (int j = 0; j < customCount; j++) {
         addInfo();
     }
+    return 0;
 }
 
 void save() {
-    FILE* file = fopen("cameras.txt", "w");
+    FILE *file = fopen("cameras.txt", "w");
     if (file == NULL) {
-        perror("Ошибка открытия файла");
+        printf("Ошибка открытия файла\n");
         return;
     }
+    fprintf(file, "Разрешение: Мегапиксели: Микрофон: Подключение: Угол обзора:\n");
     for (int i = 0; i < recordCount; i++) {
-        fprintf(file, "%s %lg %s %s %i\n", database[i].resolution, database[i].mpixNum, database[i].microphone, database[i].connectionType, database[i].angle);
+        fprintf(file, "%s     %lg          %s        %s            %i\n", database[i].resolution, database[i].mpixNum, database[i].microphone, database[i].connectionType, database[i].angle);
     }
     fclose(file);
-    printf("Данные сохранены в файл.\n");
+    printf("Данные сохранены в файл.\n\n");
 }
 
 void load() {
-    FILE* file = fopen("cameras.txt", "r");
+    FILE *file = fopen("cameras.txt", "r");
     if (file == NULL) {
-        perror("Ошибка открытия файла");
+        printf("Ошибка открытия файла");
         return;
     }
     recordCount = 0;
+    char header[1000];
+    fgets(header, sizeof(header), file);
+
     while (fscanf(file, "%s %lg %s %s %i", database[recordCount].resolution, &database[recordCount].mpixNum, database[recordCount].microphone, database[recordCount].connectionType, &database[recordCount].angle) != EOF) {
         recordCount++;
     }
     fclose(file);
-    printf("Данные загружены из файла.\n");
+    printf("Данные загружены из файла.\n\n");
 }
