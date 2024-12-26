@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <locale.h>
 #include <math.h>
@@ -9,7 +10,7 @@ void full_elements(double* ptr_array, int n) {
     }
 }
 
-double sum_elems(double* ptr_array, int s, int e) {
+int sum_elems(double* ptr_array, int s, int e) {
     double summ = 0;
     for (int i = s; i <= e; i++) {
         summ += ptr_array[i];
@@ -40,9 +41,9 @@ void calc_elements(double* ptr_array, int n) {
 
 int main() {
     setlocale(LC_ALL, "RUS");
-    double array[N];
+    int array[N];
     int size, start, end;
-    double num;
+    int num;
 
     puts("Введите размер массива (< 1000):");
     scanf("%i", &size);
@@ -54,14 +55,14 @@ int main() {
     puts("Введите конечный индекс:");
     scanf("%i", &end);
     puts("Введите число для поиска в массиве:");
-    scanf("%lg", &num);
+    scanf("%i", &num);
 
-    printf("\n%lg\n", sum_elems(array, start, end));
+    printf("\nСумма элементов: %i\n", sum_elems(array, start, end));
     int index = find_elem(array, size, num);
     if (index != -1) {
-        printf("Номер ближайшего индекса для числа %lg - %i\n", num, index);
+        printf("Номер ближайшего индекса для числа %i - %i\n", num, index);
     }
     else {
-        printf("Элемент %lg не найден в массиве.\n", num);
+        printf("Элемент %i не найден в массиве.\n", num);
     }
 }
