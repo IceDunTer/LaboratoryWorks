@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h>
 #define NMAX 100
-#define TYPE int
+#define TYPE char*
 
 typedef struct Stack {
     int top;
@@ -32,53 +33,40 @@ TYPE pop(stack* s) {
         return s->data[s->top--];
     }
     printf("Стек пуст\n");
-    return '\0';
+    return NULL;
 }
 
-void display(stack* s) {
-    if (isempty(s)) {
-        printf("Стек пуст\n");
-        return;
+void reverse(char* line, stack* s) {
+    char* token = strtok(line, " ");
+    while (token != NULL) {
+        push(s, token);
+        token = strtok(NULL, " ");
     }
-    for (int i = 0; i <= s->top; i++) {
-        printf("%i ", s->data[i]);
+
+    printf("Обратный порядок слов: ");
+    while (!isempty(s)) {
+        printf("%s ", pop(s));
     }
     printf("\n");
 }
-stack reverse(stack* s) {
-    stack z = { .top = -1 };
-    while (!isempty(s)) {
-        push(&z, pop(s));
-    }
-    return z;
-}
 
 int main() {
-    stack z = { .top = -1 };
-    stack c = { .top = -1 };
-    int s = 0, p = 1, cnt= 0, cnt1 = 0;
     setlocale(LC_ALL, "RUS");
-    while (p != 0) {
-        printf("Введите число\n");
-        scanf("%i", &s);
-        if (s != 0) push(&z, s);
-        printf("Если хотите закончить ввод, введите 0, иначе 1\n");
-        scanf("%i", &p);
+    FILE* input_file = fopen("input.txt", "r");
+    FILE* output_file = fopen("output.txt", "w");
+    if (input_file == NULL || output_file == NULL) {
+        printf("Ошибка открытия файла\n");
+        return 1;
     }
-    printf("Исходный стек:\n");
-    display(&z);
-    cnt1 = cnt = ((&z)->top + 1) / 2;
-    while (cnt != 0) {
-        cnt--;
-        push(&c, pop(&z));
-    }
-    c = reverse(&c);
-    z = reverse(&z);
-    while (!isempty(&z)) {
-        push(&c, pop(&z));
-    }
-    printf("Стек после перестановки:\n");
-    display(&c);
 
-    return 0;
+    stack s = { .top = -1 };
+    char line[1024];
+
+    while (fgets(line, sizeof(line), input_file)) {
+        reverse(line, &s);
+        fprintf(output_file, "%s\n", line);
+    }
+
+    fclose(input_file);
+    fclose(output_file);
 }
