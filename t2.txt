@@ -2,61 +2,81 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+
 #define NMAX 100
 #define TYPE char
-#define FTYPE "%3c,"
+#define FTYPE "%c "
 
-struct  Node {
-	TYPE data;
-	struct Node* next;
+struct Node {
+    TYPE data;
+    struct Node* next;
 };
 
 typedef struct {
-	struct  Node* queue;
-	struct  Node* front;
-	struct  Node* back;
+    struct Node* queue;
+    struct Node* front;
+    struct Node* back;
 } queue_list;
+
 void enQueue(queue_list* que, TYPE element) {
-	struct Node new;
-	if (que->back != NULL) {
-		que->back->next = &new;
-		que->back = &new;
-	}
-	else {
-		que->back = &new;
-		que->front = &new;
-	}
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Ошибка выделения памяти\n");
+        return;
+    }
+    newNode->data = element;
+    newNode->next = NULL;
+
+    if (que->back != NULL) {
+        que->back->next = newNode;
+        que->back = newNode;
+    }
+    else {
+        que->back = newNode;
+        que->front = newNode;
+    }
 }
+
 TYPE deQueue(queue_list* que) {
-	TYPE elem;
-	if (que->front == NULL) {
-		printf("Ошбика");
-		return 0;
-	}
-	else {
-		TYPE elem = que->front->data;
-		que->front = que->front->next;
-	}
-	if (que->front == NULL) {
-		que->back = NULL;
-	}
-	return elem;
+    if (que->front == NULL) {
+        printf("Ошибка: очередь пуста\n");
+        return 0;
+    }
+    else {
+        struct Node* temp = que->front;
+        TYPE elem = temp->data;
+        que->front = que->front->next;
+        free(temp);
+
+        if (que->front == NULL) {
+            que->back = NULL;
+        }
+        return elem;
+    }
 }
-void main() {
-	setlocale(LC_ALL, "RUS");
-	queue_list str;
-	str.back = str.front = NULL;
-	char temp[100];
-	int cnt = 0;
-	puts("ВВЕдите строку");
-	scanf("%s", temp);
-	for (int i = 0; (i < 100) && (temp[i] != '\n'); i++) {
-		enQueue(&str, temp[i]);
-		cnt += 1;
-	}
-	for (int i = cnt; i >= 0; i--) printf(FTYPE, deQueue(&str));
+
+int main() {
+    setlocale(LC_ALL, "RUS");
+    queue_list str;
+    str.back = str.front = NULL;
+    char temp[100];
+    int cnt = 0;
+
+    puts("Введите строку:");
+    if (fgets(temp, sizeof(temp), stdin) != NULL) {
+        for (int i = 0; i < strlen(temp) - 1; i++) {
+            enQueue(&str, temp[i]);
+            cnt += 1;
+        }
+    }
+
+    for (int i = 0; i < cnt; i++) {
+        printf(FTYPE, deQueue(&str));
+    }
+    printf("\n");
+
+    return 0;
 }
